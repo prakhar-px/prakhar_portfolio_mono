@@ -4,6 +4,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { projects } from '@/lib/data'
 import { useTheme } from '@/hooks/useTheme'
+import { useIsMobile } from '@/hooks/useIsMobile'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -13,6 +14,7 @@ function ProjectRow({ project, index }: { project: typeof projects[0]; index: nu
   const rowRef   = useRef<HTMLDivElement>(null)
   const arrowRef = useRef<HTMLSpanElement>(null)
   const { theme } = useTheme()
+  const isMobile = useIsMobile()
 
   const toggle = () => setOpen(o => {
     const next = !o
@@ -43,7 +45,7 @@ function ProjectRow({ project, index }: { project: typeof projects[0]; index: nu
       </div>
 
       <div ref={bodyRef} style={{ height: 0, overflow: 'hidden', opacity: 0 }}>
-        <div style={{ padding: '0 52px 40px', display: 'grid', gridTemplateColumns: '1fr auto', gap: 48, alignItems: 'start' }}>
+        <div style={{ padding: isMobile ? '0 0 24px' : '0 52px 40px', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr auto', gap: isMobile ? 20 : 48, alignItems: 'start' }}>
           <div>
             <p style={{ fontSize: 15, color: 'var(--t2)', lineHeight: 1.75, marginBottom: 20, transition: 'color 0.35s' }}>{project.description}</p>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
@@ -85,6 +87,7 @@ function ProjectRow({ project, index }: { project: typeof projects[0]; index: nu
 export default function MonoProjects() {
   const ref = useRef<HTMLElement>(null)
   const { theme } = useTheme()
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -94,7 +97,7 @@ export default function MonoProjects() {
   }, [])
 
   return (
-    <section id="work" ref={ref} style={{ padding: '120px 48px', borderTop: '1px solid var(--b1)', transition: 'border-color 0.35s' }}>
+    <section id="work" ref={ref} style={{ padding: isMobile ? '80px 16px' : '120px 48px', borderTop: '1px solid var(--b1)', transition: 'border-color 0.35s' }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24 }}>
           <span style={{ fontSize: 11, color: '#dc2626', letterSpacing: '0.18em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', fontWeight: 700, transition: 'color 0.35s' }}>03 / Work</span>

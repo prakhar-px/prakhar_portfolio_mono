@@ -3,11 +3,13 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { education } from '@/lib/data'
+import { useIsMobile } from '@/hooks/useIsMobile'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export default function MonoEducation() {
   const ref = useRef<HTMLElement>(null)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -24,7 +26,7 @@ export default function MonoEducation() {
   }, [])
 
   return (
-    <section id="education" ref={ref} style={{ padding: '120px 48px', borderTop: '1px solid var(--b1)', transition: 'border-color 0.35s' }}>
+    <section id="education" ref={ref} style={{ padding: isMobile ? '80px 16px' : '120px 48px', borderTop: '1px solid var(--b1)', transition: 'border-color 0.35s' }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
 
         {/* Header */}
@@ -41,7 +43,7 @@ export default function MonoEducation() {
         <div style={{ borderTop: '1px solid var(--b1)' }}>
           {education.map((item) => (
             <div key={item.id} className="edu-row"
-              style={{ display: 'grid', gridTemplateColumns: '148px 1fr 100px', gap: 40, padding: '28px 0', borderBottom: '1px solid var(--b1)', alignItems: 'start', transition: 'border-color 0.35s' }}>
+              style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '148px 1fr 100px', gap: isMobile ? 8 : 40, padding: '28px 0', borderBottom: '1px solid var(--b1)', alignItems: 'start', transition: 'border-color 0.35s' }}>
               <div style={{ fontSize: 11, color: '#dc2626', fontFamily: 'var(--font-mono)', letterSpacing: '0.1em', paddingTop: 3 }}>
                 {item.period}
               </div>
@@ -53,7 +55,7 @@ export default function MonoEducation() {
                   {item.institution} · {item.location}
                 </div>
               </div>
-              <div style={{ fontSize: 14, fontWeight: 700, color: '#dc2626', fontFamily: 'var(--font-mono)', textAlign: 'right', paddingTop: 3 }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#dc2626', fontFamily: 'var(--font-mono)', textAlign: isMobile ? 'left' : 'right', paddingTop: 3 }}>
                 {item.score}
               </div>
             </div>

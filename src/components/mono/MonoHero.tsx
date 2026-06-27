@@ -88,7 +88,7 @@ export default function MonoHero() {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'flex-end',
-        padding: isMobile ? '0 16px 32px' : '0 48px 56px',
+        padding: '0 48px 56px',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -97,13 +97,12 @@ export default function MonoHero() {
         ref={labelRef}
         style={{
           position: 'absolute',
-          top: isMobile ? 76 : 32,
-          left: isMobile ? 16 : 48,
-          right: isMobile ? 16 : 'auto',
+          top: 32,
+          left: 48,
           display: 'flex',
-          flexDirection: isMobile ? 'column' : 'row',
-          alignItems: isMobile ? 'flex-start' : 'center',
-          gap: isMobile ? 10 : 20,
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 20,
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -146,13 +145,13 @@ export default function MonoHero() {
 
       <div ref={nameRef} style={{ willChange: 'clip-path, transform' }}>
         <h1
-          style={{
-            fontSize: isMobile ? '4.8rem' : 'clamp(5.5rem, 15vw, 13rem)',
-            fontWeight: 900,
-            lineHeight: 0.88,
-            letterSpacing: '-0.04em',
-            color: 'var(--t1)',
-            transition: 'color 0.35s',
+            style={{
+              fontSize: 'clamp(5.5rem, 15vw, 13rem)',
+              fontWeight: 900,
+              lineHeight: 0.88,
+              letterSpacing: '-0.04em',
+              color: 'var(--t1)',
+              transition: 'color 0.35s',
           }}
         >
           PRAKHAR
@@ -164,7 +163,7 @@ export default function MonoHero() {
         style={{
           height: 1,
           background: 'var(--b1)',
-          margin: isMobile ? '18px 0 20px' : '28px 0',
+          margin: '28px 0',
           transition: 'background 0.35s',
         }}
       />
@@ -172,16 +171,16 @@ export default function MonoHero() {
       <div
         style={{
           display: 'flex',
-          flexDirection: isMobile ? 'column' : 'row',
-          alignItems: isMobile ? 'stretch' : 'flex-end',
+          flexDirection: 'row',
+          alignItems: 'flex-end',
           justifyContent: 'space-between',
-          gap: isMobile ? 24 : 40,
+          gap: 40,
         }}
       >
         <div ref={subRef} style={{ maxWidth: 500 }}>
           <p
             style={{
-              fontSize: isMobile ? '1rem' : 'clamp(1rem, 1.8vw, 1.2rem)',
+              fontSize: 'clamp(1rem, 1.8vw, 1.2rem)',
               color: 'var(--t2)',
               lineHeight: 1.65,
               fontWeight: 300,
@@ -197,10 +196,10 @@ export default function MonoHero() {
           ref={ctaRef}
           style={{
             display: 'flex',
-            flexDirection: isMobile ? 'column' : 'row',
+            flexDirection: 'row',
             gap: 12,
             flexShrink: 0,
-            width: isMobile ? '100%' : 'auto',
+            width: 'auto',
           }}
         >
           <button
@@ -209,7 +208,7 @@ export default function MonoHero() {
             data-cursor
             style={{
               padding: '14px 32px',
-              width: isMobile ? '100%' : 'auto',
+              width: 'auto',
               background: 'var(--btn-bg)',
               color: 'var(--btn-text)',
               fontSize: 13,
@@ -228,7 +227,7 @@ export default function MonoHero() {
             data-cursor
             style={{
               padding: '14px 32px',
-              width: isMobile ? '100%' : 'auto',
+              width: 'auto',
               background: 'transparent',
               color: 'var(--t3)',
               fontSize: 13,
@@ -251,7 +250,7 @@ export default function MonoHero() {
           bottom: 32,
           left: '50%',
           transform: 'translateX(-50%)',
-          display: isMobile ? 'none' : 'flex',
+          display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           gap: 8,

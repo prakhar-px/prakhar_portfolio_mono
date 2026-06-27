@@ -4,6 +4,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { personalInfo } from '@/lib/data'
 import { useTheme } from '@/hooks/useTheme'
+import { useIsMobile } from '@/hooks/useIsMobile'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -21,6 +22,7 @@ export default function MonoContact() {
   const ref    = useRef<HTMLElement>(null)
   const btnRef = useRef<HTMLButtonElement>(null)
   const { theme } = useTheme()
+  const isMobile = useIsMobile()
   const [status,  setStatus]  = useState<'idle'|'sending'|'sent'>('idle')
   const [focused, setFocused] = useState('')
   const [form,    setForm]    = useState({ name: '', email: '', message: '' })
@@ -48,14 +50,14 @@ export default function MonoContact() {
   })
 
   return (
-    <section id="contact" ref={ref} style={{ padding: '120px 48px 80px', borderTop: '1px solid var(--b1)', transition: 'border-color 0.35s' }}>
+    <section id="contact" ref={ref} style={{ padding: isMobile ? '80px 16px 60px' : '120px 48px 80px', borderTop: '1px solid var(--b1)', transition: 'border-color 0.35s' }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24 }}>
           <span style={{ fontSize: 11, color: '#dc2626', letterSpacing: '0.18em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', fontWeight: 700, transition: 'color 0.35s' }}>07 / Contact</span>
           <div style={{ flex: 1, height: 1, background: 'var(--b1)', transition: 'background 0.35s' }} />
         </div>
 
-        <div className="contact-content" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'start' }}>
+        <div className="contact-content" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 48 : 80, alignItems: 'start' }}>
           {/* Left */}
           <div>
             <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 1, color: 'var(--t1)', marginBottom: 32, transition: 'color 0.35s' }}>
@@ -130,7 +132,7 @@ export default function MonoContact() {
         </div>
 
         {/* Footer */}
-        <div style={{ marginTop: 96, paddingTop: 32, borderTop: '1px solid var(--b1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', transition: 'border-color 0.35s' }}>
+        <div style={{ marginTop: isMobile ? 64 : 96, paddingTop: 32, borderTop: '1px solid var(--b1)', display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 8 : 0, justifyContent: 'space-between', alignItems: 'center', transition: 'border-color 0.35s' }}>
           <span style={{ fontSize: 12, color: 'var(--t4)', fontFamily: 'var(--font-mono)', transition: 'color 0.35s' }}>Prakhar · 2026</span>
           <span style={{ fontSize: 12, color: 'var(--t4)', fontFamily: 'var(--font-mono)', transition: 'color 0.35s' }}>Built with Next.js · GSAP</span>
         </div>

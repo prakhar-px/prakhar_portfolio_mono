@@ -4,12 +4,14 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { experience } from '@/lib/data'
 import { useTheme } from '@/hooks/useTheme'
+import { useIsMobile } from '@/hooks/useIsMobile'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export default function MonoExperience() {
   const ref = useRef<HTMLElement>(null)
   const { theme } = useTheme()
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -19,7 +21,7 @@ export default function MonoExperience() {
   }, [])
 
   return (
-    <section id="experience" ref={ref} style={{ padding: '120px 48px', borderTop: '1px solid var(--b1)', transition: 'border-color 0.35s' }}>
+    <section id="experience" ref={ref} style={{ padding: isMobile ? '80px 16px' : '120px 48px', borderTop: '1px solid var(--b1)', transition: 'border-color 0.35s' }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24 }}>
           <span style={{ fontSize: 11, color: '#dc2626', letterSpacing: '0.18em', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', fontWeight: 700, transition: 'color 0.35s' }}>04 / Experience</span>
@@ -31,7 +33,7 @@ export default function MonoExperience() {
 
         {experience.map((exp, i) => (
           <div key={exp.id} className="exp-row"
-            style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: 48, padding: '48px 0', borderTop: '1px solid var(--b1)', transition: 'border-color 0.35s' }}>
+            style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '200px 1fr', gap: isMobile ? 16 : 48, padding: '48px 0', borderTop: '1px solid var(--b1)', transition: 'border-color 0.35s' }}>
             {/* Meta */}
             <div>
               <div style={{ fontSize: 11, color: 'var(--t3)', fontFamily: 'var(--font-mono)', letterSpacing: '0.08em', marginBottom: 8, transition: 'color 0.35s' }}>{exp.period}</div>
@@ -50,7 +52,7 @@ export default function MonoExperience() {
                 {exp.role}
               </h3>
               <p style={{ fontSize: 15, color: 'var(--t2)', lineHeight: 1.7, marginBottom: 24, transition: 'color 0.35s' }}>{exp.description}</p>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 24px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '8px 24px' }}>
                 {exp.highlights.map((h, j) => (
                   <div key={j} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
                     <span style={{ color: 'var(--t4)', fontSize: 12, marginTop: 2, flexShrink: 0, transition: 'color 0.35s' }}>–</span>

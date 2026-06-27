@@ -4,12 +4,14 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { stats } from '@/lib/data'
 import { useTheme } from '@/hooks/useTheme'
+import { useIsMobile } from '@/hooks/useIsMobile'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export default function MonoAbout() {
   const ref = useRef<HTMLElement>(null)
   const { bg, theme } = useTheme()
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -28,7 +30,7 @@ export default function MonoAbout() {
   }, [])
 
   return (
-    <section id="about" ref={ref} style={{ padding: '120px 48px', borderTop: '1px solid var(--b1)', transition: 'border-color 0.35s' }}>
+    <section id="about" ref={ref} style={{ padding: isMobile ? '80px 16px' : '120px 48px', borderTop: '1px solid var(--b1)', transition: 'border-color 0.35s' }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
 
         <div className="about-label" style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 64 }}>
@@ -36,7 +38,7 @@ export default function MonoAbout() {
           <div style={{ flex: 1, height: 1, background: 'var(--b1)', transition: 'background 0.35s' }} />
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'start' }}>
           {/* Bio */}
           <div>
             <div className="bio-line">
@@ -67,7 +69,7 @@ export default function MonoAbout() {
 
           {/* Stats */}
           <div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'var(--b1)', transition: 'background 0.35s' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 1, background: 'var(--b1)', transition: 'background 0.35s' }}>
               {stats.map(s => (
                 <div key={s.label} className="stat-item" style={{ background: bg, padding: '36px 28px', transition: 'background 0.35s' }}>
                   <div className="stat-num" data-val={s.value}

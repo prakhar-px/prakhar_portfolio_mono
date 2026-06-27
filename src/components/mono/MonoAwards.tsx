@@ -3,11 +3,15 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { awards } from '@/lib/data'
+import { useIsMobile } from '@/hooks/useIsMobile'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export default function MonoAwards() {
   const ref = useRef<HTMLElement>(null)
+  const isMobile = useIsMobile()
+
+
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -20,7 +24,7 @@ export default function MonoAwards() {
   }, [])
 
   return (
-    <section id="awards" ref={ref} style={{ padding: '120px 48px', borderTop: '1px solid var(--b1)', transition: 'border-color 0.35s' }}>
+    <section id="awards" ref={ref} style={{ padding: isMobile ? '80px 16px' : '120px 48px', borderTop: '1px solid var(--b1)', transition: 'border-color 0.35s' }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24 }}>
@@ -36,7 +40,7 @@ export default function MonoAwards() {
         <div style={{ borderTop: '1px solid var(--b1)' }}>
           {awards.map((award, i) => (
             <div key={award.id} className="award-row"
-              style={{ display: 'grid', gridTemplateColumns: '28px 140px 1fr 80px', gap: 36, padding: '28px 0', borderBottom: '1px solid var(--b1)', alignItems: 'center', transition: 'border-color 0.35s' }}>
+              style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '28px 140px 1fr 80px', gap: isMobile ? 6 : 36, padding: '28px 0', borderBottom: '1px solid var(--b1)', alignItems: 'center', transition: 'border-color 0.35s' }}>
 
               {/* Index */}
               <span style={{ fontSize: 11, color: 'var(--t4)', fontFamily: 'var(--font-mono)', letterSpacing: '0.06em', transition: 'color 0.35s' }}>
