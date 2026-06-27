@@ -139,7 +139,7 @@ export const projects = [
       'PHP-based Indian clothing e-commerce site with real-time cart, wishlist, and search functionalities. Includes user authentication, product catalog, and a responsive storefront built from scratch.',
     tech: ['PHP', 'MySQL', 'JavaScript', 'HTML5', 'CSS3'],
     github: 'https://github.com/prakhar-radhakrishnan/Bathan-CSW',
-    live: 'https://bathan.in',
+    live: '',
     status: 'Active',
     metric: 'Full Commerce',
   },
