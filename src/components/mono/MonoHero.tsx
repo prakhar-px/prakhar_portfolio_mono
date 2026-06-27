@@ -53,21 +53,19 @@ export default function MonoHero() {
   const statTargets = stats.map(s => parseFloat(s.value.replace(/[^\d.]/g, '')))
   const statSuffixes = stats.map(s => s.value.replace(/[\d.]+/g, ''))
   const [statCounts, setStatCounts] = useState(statTargets.map(() => 0))
-  const counterRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
-    if (!isMobile) {
-      if (counterRef.current) { clearInterval(counterRef.current); counterRef.current = null }
-      return
+    if (!isMobile) { setStatCounts(statTargets.map(() => 0)); return }
+    let rafId: number
+    const start = performance.now()
+    const duration = 1200
+    const tick = (now: number) => {
+      const p = Math.min(1, (now - start) / duration)
+      setStatCounts(statTargets.map(t => Math.round(t * p)))
+      if (p < 1) rafId = requestAnimationFrame(tick)
     }
-    const steps = statTargets.map(t => Math.max(1, t / 30))
-    counterRef.current = setInterval(() => {
-      setStatCounts(prev => {
-        const next = prev.map((c, i) => Math.min(c + steps[i], statTargets[i]))
-        return next
-      })
-    }, 40)
-    return () => { if (counterRef.current) clearInterval(counterRef.current) }
+    rafId = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(rafId)
   }, [isMobile])
 
   useEffect(() => {
