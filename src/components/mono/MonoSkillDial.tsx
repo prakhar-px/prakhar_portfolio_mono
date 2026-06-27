@@ -432,6 +432,7 @@ function CurvedLabel({
 
 export default function MonoSkillDial() {
   const sectionRef = useRef<HTMLElement>(null)
+  const isMobile = useIsMobile()
   const stageRef = useRef<HTMLDivElement>(null)
   const detailsRef = useRef<HTMLDivElement>(null)
   const rafRef = useRef<number>(0)
@@ -445,7 +446,6 @@ export default function MonoSkillDial() {
 
   const [position, setPosition] = useState(0)
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const isMobile = useIsMobile()
 
   const selectedSkill = DIAL_SKILLS_WITH_CATEGORY[selectedIndex]
   const activeCategoryIndex = selectedSkill.categoryIndex
@@ -783,16 +783,17 @@ export default function MonoSkillDial() {
   }, [activeCategoryIndex])
 
   useEffect(() => {
+    const isMobileView = window.innerWidth <= 640
     const ctx = gsap.context(() => {
       gsap.fromTo(
         `.${styles.frame}`,
-        { opacity: 0, y: 28 },
+        { opacity: isMobileView ? 1 : 0, y: isMobileView ? 0 : 28 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.85,
+          duration: isMobileView ? 0 : 0.85,
           ease: 'power3.out',
-          scrollTrigger: { trigger: sectionRef.current, start: 'top 72%' },
+          scrollTrigger: isMobileView ? undefined : { trigger: sectionRef.current, start: 'top 72%' },
         }
       )
     }, sectionRef)
@@ -843,14 +844,14 @@ export default function MonoSkillDial() {
         : isMedium
           ? 'var(--dial-tick-medium)'
           : 'var(--dial-tick-fine)'
-    const strokeWidth = isActive ? 1.45 : isMajor ? 1.05 : isMedium ? 0.82 : 0.68
+    const strokeWidth = isActive ? 1.45 : isMajor ? 1.2 : isMedium ? 1.1 : 1.0
     const opacity = isActive
       ? 0.64 + centerWeight * 0.36
       : isMajor
-        ? 0.42 + centerWeight * 0.32
+        ? 0.55 + centerWeight * 0.35
         : isMedium
-          ? 0.28 + centerWeight * 0.22
-          : 0.2 + centerWeight * 0.14
+          ? 0.48 + centerWeight * 0.32
+          : 0.4 + centerWeight * 0.3
 
     return (
       <g key={`tick-${index}`} className={styles.tickGroup} onPointerDown={handleTickPointerDown}>
@@ -861,7 +862,6 @@ export default function MonoSkillDial() {
           x2={outer.x}
           y2={outer.y}
           stroke="transparent"
-          strokeWidth={isMobile ? 32 : 20}
         />
         <line
           className={styles.tickMark}
@@ -897,7 +897,7 @@ export default function MonoSkillDial() {
         className={styles.skillGroup}
         onPointerDown={event => handleSkillPointerDown(event, skill.index)}
       >
-        <circle cx={point.x} cy={point.y} r={isMobile ? 40 : 28} fill="transparent" className={styles.skillHit} />
+        <circle cx={point.x} cy={point.y} r={28} fill="transparent" className={styles.skillHit} />
         <CurvedLabel
           id={`${uid}-skill-${skill.index}`}
           text={skill.name}
@@ -1091,3 +1091,4 @@ async function playTick(
   osc.stop(now + 0.04)
   click.stop(now + 0.015)
 }
+
