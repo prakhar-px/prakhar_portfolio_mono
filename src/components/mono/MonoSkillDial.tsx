@@ -442,7 +442,6 @@ export default function MonoSkillDial() {
   const audioRef = useRef<AudioContext | null>(null)
   const audioReadyRef = useRef(false)
   const reduceMotionRef = useRef(false)
-  const prevCategoryRef = useRef(-1)
   const uid = useId().replace(/:/g, '')
 
   const [position, setPosition] = useState(0)
@@ -463,15 +462,9 @@ export default function MonoSkillDial() {
 
     const nextIndex = mod(Math.round(nextPosition), SKILL_COUNT)
     if (nextIndex !== selectedIndexRef.current) {
-      const nextCategory = DIAL_SKILLS_WITH_CATEGORY[nextIndex].categoryIndex
-      if (nextCategory !== prevCategoryRef.current) {
-        prevCategoryRef.current = nextCategory
-        void playCategoryChange(audioRef, audioReadyRef, reduceMotionRef.current ? 0.5 : 1)
-      } else {
-        void playTick(audioRef, audioReadyRef, reduceMotionRef.current ? 0.5 : 1)
-      }
       selectedIndexRef.current = nextIndex
       startTransition(() => setSelectedIndex(nextIndex))
+      void playTick(audioRef, audioReadyRef, reduceMotionRef.current ? 0.5 : 1)
     }
   }
 
@@ -1097,41 +1090,5 @@ async function playTick(
   click.start(now)
   osc.stop(now + 0.04)
   click.stop(now + 0.015)
-}
-
-async function playCategoryChange(
-  audioRef: RefObject<AudioContext | null>,
-  readyRef: RefObject<boolean>,
-  intensity: number
-) {
-  await unlockAudio(audioRef, readyRef)
-  const ctx = audioRef.current
-  if (!ctx || ctx.state !== 'running') return
-
-  const now = ctx.currentTime
-
-  const osc1 = ctx.createOscillator()
-  osc1.type = 'sine'
-  osc1.frequency.setValueAtTime(440, now)
-  osc1.frequency.exponentialRampToValueAtTime(720, now + 0.1)
-
-  const osc2 = ctx.createOscillator()
-  osc2.type = 'triangle'
-  osc2.frequency.setValueAtTime(260, now)
-
-  const gain = ctx.createGain()
-  gain.gain.setValueAtTime(0.0001, now)
-  gain.gain.linearRampToValueAtTime(0.07 * intensity, now + 0.003)
-  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.16)
-
-  gain.connect(ctx.destination)
-
-  osc1.connect(gain)
-  osc2.connect(gain)
-
-  osc1.start(now)
-  osc2.start(now)
-  osc1.stop(now + 0.2)
-  osc2.stop(now + 0.16)
 }
 
