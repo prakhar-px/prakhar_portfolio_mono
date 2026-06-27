@@ -5,6 +5,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useTheme } from '@/hooks/useTheme'
 import { useIsMobile } from '@/hooks/useIsMobile'
+import { stats } from '@/lib/data'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -41,6 +42,7 @@ export default function MonoHero() {
   const subRef = useRef<HTMLDivElement>(null)
   const ctaRef = useRef<HTMLDivElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const statsRef = useRef<HTMLDivElement>(null)
   const btn1Ref = useRef<HTMLButtonElement>(null)
   const btn2Ref = useRef<HTMLButtonElement>(null)
   const { theme } = useTheme()
@@ -78,17 +80,36 @@ export default function MonoHero() {
     return () => ctx.revert()
   }, [])
 
+  useEffect(() => {
+    if (!isMobile) return
+    const els = statsRef.current?.querySelectorAll<HTMLElement>('[data-val]')
+    if (!els) return
+    els.forEach(el => {
+      const raw = el.dataset.val || ''
+      const num = parseFloat(raw.replace(/[^\d.]/g, ''))
+      const sfx = raw.replace(/[\d.]/g, '')
+      if (isNaN(num)) return
+      let current = 0
+      const step = Math.max(1, num / 30)
+      const timer = setInterval(() => {
+        current += step
+        el.textContent = current >= num ? Math.round(num) + sfx : Math.round(current) + sfx
+        if (current >= num) clearInterval(timer)
+      }, 40)
+    })
+  }, [isMobile])
+
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
 
   return (
     <section
       ref={sectionRef}
       style={{
-        minHeight: '100svh',
+        minHeight: isMobile ? 'auto' : '100svh',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'flex-end',
-        padding: '0 48px 56px',
+        justifyContent: isMobile ? 'flex-start' : 'flex-end',
+        padding: isMobile ? '84px 16px 22px' : '0 48px 56px',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -97,12 +118,13 @@ export default function MonoHero() {
         ref={labelRef}
         style={{
           position: 'absolute',
-          top: 32,
-          left: 48,
+          top: isMobile ? 76 : 32,
+          left: isMobile ? 16 : 48,
+          right: isMobile ? 16 : 'auto',
           display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: 20,
+          flexDirection: isMobile ? 'column' : 'row',
+          alignItems: isMobile ? 'flex-start' : 'center',
+          gap: isMobile ? 10 : 20,
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -145,13 +167,14 @@ export default function MonoHero() {
 
       <div ref={nameRef} style={{ willChange: 'clip-path, transform' }}>
         <h1
-            style={{
-              fontSize: 'clamp(5.5rem, 15vw, 13rem)',
-              fontWeight: 900,
-              lineHeight: 0.88,
-              letterSpacing: '-0.04em',
-              color: 'var(--t1)',
-              transition: 'color 0.35s',
+          style={{
+            fontSize: isMobile ? 'clamp(4.25rem, 18vw, 5.4rem)' : 'clamp(5.5rem, 15vw, 13rem)',
+            fontWeight: 900,
+            lineHeight: 0.88,
+            letterSpacing: '-0.04em',
+            color: 'var(--t1)',
+            transition: 'color 0.35s',
+            marginTop: isMobile ? 18 : 0,
           }}
         >
           PRAKHAR
@@ -163,7 +186,7 @@ export default function MonoHero() {
         style={{
           height: 1,
           background: 'var(--b1)',
-          margin: '28px 0',
+          margin: isMobile ? '14px 0 16px' : '28px 0',
           transition: 'background 0.35s',
         }}
       />
@@ -171,16 +194,16 @@ export default function MonoHero() {
       <div
         style={{
           display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'flex-end',
+          flexDirection: isMobile ? 'column' : 'row',
+          alignItems: isMobile ? 'stretch' : 'flex-end',
           justifyContent: 'space-between',
-          gap: 40,
+          gap: isMobile ? 24 : 40,
         }}
       >
         <div ref={subRef} style={{ maxWidth: 500 }}>
           <p
             style={{
-              fontSize: 'clamp(1rem, 1.8vw, 1.2rem)',
+              fontSize: isMobile ? '1rem' : 'clamp(1rem, 1.8vw, 1.2rem)',
               color: 'var(--t2)',
               lineHeight: 1.65,
               fontWeight: 300,
@@ -190,16 +213,30 @@ export default function MonoHero() {
             I build scalable backend applications - Kafka-based event pipelines,
             Elasticsearch-powered search, and Spring Boot services that ship.
           </p>
+          {isMobile && (
+            <div ref={statsRef} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, marginTop: 20 }}>
+              {stats.map(s => (
+                <div key={s.label} style={{ padding: '16px 0' }}>
+                  <div data-val={s.value} style={{ fontSize: '1.2rem', fontWeight: 900, color: '#dc2626', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 4 }}>
+                    {s.value.replace(/^[\d.]+/, '0')}
+                  </div>
+                  <div style={{ fontSize: 10, color: 'var(--t3)', fontFamily: 'var(--font-mono)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                    {s.label.replace(/_/g, ' ')}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div
           ref={ctaRef}
           style={{
             display: 'flex',
-            flexDirection: 'row',
+            flexDirection: isMobile ? 'row' : 'row',
             gap: 12,
             flexShrink: 0,
-            width: 'auto',
+            width: isMobile ? '100%' : 'auto',
           }}
         >
           <button
@@ -208,7 +245,7 @@ export default function MonoHero() {
             data-cursor
             style={{
               padding: '14px 32px',
-              width: 'auto',
+              flex: isMobile ? 1 : 'none',
               background: 'var(--btn-bg)',
               color: 'var(--btn-text)',
               fontSize: 13,
@@ -227,7 +264,7 @@ export default function MonoHero() {
             data-cursor
             style={{
               padding: '14px 32px',
-              width: 'auto',
+              flex: isMobile ? 1 : 'none',
               background: 'transparent',
               color: 'var(--t3)',
               fontSize: 13,
@@ -250,7 +287,7 @@ export default function MonoHero() {
           bottom: 32,
           left: '50%',
           transform: 'translateX(-50%)',
-          display: 'flex',
+          display: isMobile ? 'none' : 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           gap: 8,
