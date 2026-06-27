@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useTheme } from '@/hooks/useTheme'
@@ -42,7 +42,6 @@ export default function MonoHero() {
   const subRef = useRef<HTMLDivElement>(null)
   const ctaRef = useRef<HTMLDivElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
-  const statsRef = useRef<HTMLDivElement>(null)
   const btn1Ref = useRef<HTMLButtonElement>(null)
   const btn2Ref = useRef<HTMLButtonElement>(null)
   const { theme } = useTheme()
@@ -50,6 +49,26 @@ export default function MonoHero() {
 
   useMagnetic(btn1Ref)
   useMagnetic(btn2Ref)
+
+  const statTargets = stats.map(s => parseFloat(s.value.replace(/[^\d.]/g, '')))
+  const statSuffixes = stats.map(s => s.value.replace(/[\d.]+/g, ''))
+  const [statCounts, setStatCounts] = useState(statTargets.map(() => 0))
+  const counterRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  useEffect(() => {
+    if (!isMobile) {
+      if (counterRef.current) { clearInterval(counterRef.current); counterRef.current = null }
+      return
+    }
+    const steps = statTargets.map(t => Math.max(1, t / 30))
+    counterRef.current = setInterval(() => {
+      setStatCounts(prev => {
+        const next = prev.map((c, i) => Math.min(c + steps[i], statTargets[i]))
+        return next
+      })
+    }, 40)
+    return () => { if (counterRef.current) clearInterval(counterRef.current) }
+  }, [isMobile])
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -79,25 +98,6 @@ export default function MonoHero() {
 
     return () => ctx.revert()
   }, [])
-
-  useEffect(() => {
-    if (!isMobile) return
-    const els = statsRef.current?.querySelectorAll<HTMLElement>('[data-val]')
-    if (!els) return
-    els.forEach(el => {
-      const raw = el.dataset.val || ''
-      const num = parseFloat(raw.replace(/[^\d.]/g, ''))
-      const sfx = raw.replace(/[\d.]/g, '')
-      if (isNaN(num)) return
-      let current = 0
-      const step = Math.max(1, num / 30)
-      const timer = setInterval(() => {
-        current += step
-        el.textContent = current >= num ? Math.round(num) + sfx : Math.round(current) + sfx
-        if (current >= num) clearInterval(timer)
-      }, 40)
-    })
-  }, [isMobile])
 
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
 
@@ -214,11 +214,11 @@ export default function MonoHero() {
             Elasticsearch-powered search, and Spring Boot services that ship.
           </p>
           {isMobile && (
-            <div ref={statsRef} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, marginTop: 20 }}>
-              {stats.map(s => (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, marginTop: 20 }}>
+              {stats.map((s, i) => (
                 <div key={s.label} style={{ padding: '16px 0' }}>
-                  <div data-val={s.value} style={{ fontSize: '1.2rem', fontWeight: 900, color: '#dc2626', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 4 }}>
-                    {s.value.replace(/^[\d.]+/, '0')}
+                  <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#dc2626', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 4 }}>
+                    {Math.round(statCounts[i])}{statSuffixes[i]}
                   </div>
                   <div style={{ fontSize: 10, color: 'var(--t3)', fontFamily: 'var(--font-mono)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
                     {s.label.replace(/_/g, ' ')}
