@@ -3,37 +3,47 @@
 }
 
 .inner {
-  max-width: 1100px;
+  max-width: none;
   margin: 0 auto;
 }
 
 .frame {
   position: relative;
+  opacity: 1;
 }
 
 .stage {
   position: relative;
-  max-width: 1000px;
+  max-width: min(1600px, 98vw);
   margin: 0 auto;
   padding: 0 0 8px;
   touch-action: none;
   outline: none;
   cursor: grab;
-  --dial-rail-stroke: color-mix(in srgb, var(--t1) 24%, transparent);
-  --dial-inner-rail-stroke: color-mix(in srgb, var(--t1) 17%, transparent);
-  --dial-tick-track: color-mix(in srgb, var(--t1) 16%, transparent);
-  --dial-tick-major: color-mix(in srgb, var(--t1) 54%, transparent);
-  --dial-tick-medium: color-mix(in srgb, var(--t1) 45%, transparent);
-  --dial-tick-fine: color-mix(in srgb, var(--t1) 40%, transparent);
+  --dial-rail-stroke: color-mix(in srgb, var(--t1) 34%, transparent);
+  --dial-inner-rail-stroke: color-mix(in srgb, var(--t1) 26%, transparent);
+  --dial-tick-track: color-mix(in srgb, var(--t1) 26%, transparent);
+  --dial-tick-major: color-mix(in srgb, var(--t1) 66%, transparent);
+  --dial-tick-medium: color-mix(in srgb, var(--t1) 56%, transparent);
+  --dial-tick-fine: color-mix(in srgb, var(--t1) 50%, transparent);
 }
 
 :global([data-theme="light"]) .stage {
-  --dial-rail-stroke: color-mix(in srgb, #111111 28%, transparent);
-  --dial-inner-rail-stroke: color-mix(in srgb, #111111 22%, transparent);
-  --dial-tick-track: color-mix(in srgb, #111111 20%, transparent);
-  --dial-tick-major: color-mix(in srgb, #111111 58%, transparent);
-  --dial-tick-medium: color-mix(in srgb, #111111 48%, transparent);
-  --dial-tick-fine: color-mix(in srgb, #111111 43%, transparent);
+  --dial-rail-stroke: color-mix(in srgb, #111111 34%, transparent);
+  --dial-inner-rail-stroke: color-mix(in srgb, #111111 28%, transparent);
+  --dial-tick-track: color-mix(in srgb, #111111 26%, transparent);
+  --dial-tick-major: color-mix(in srgb, #111111 64%, transparent);
+  --dial-tick-medium: color-mix(in srgb, #111111 54%, transparent);
+  --dial-tick-fine: color-mix(in srgb, #111111 48%, transparent);
+}
+
+:global([data-theme="dark"]) .stage {
+  --dial-rail-stroke: color-mix(in srgb, #ffffff 60%, transparent);
+  --dial-inner-rail-stroke: color-mix(in srgb, #ffffff 50%, transparent);
+  --dial-tick-track: color-mix(in srgb, #ffffff 48%, transparent);
+  --dial-tick-major: color-mix(in srgb, #ffffff 92%, transparent);
+  --dial-tick-medium: color-mix(in srgb, #ffffff 86%, transparent);
+  --dial-tick-fine: color-mix(in srgb, #ffffff 78%, transparent);
 }
 
 .stage:active {
@@ -90,6 +100,12 @@
 
 .skillHit {
   pointer-events: all;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.2s ease;
+  fill: transparent;
+  stroke: transparent;
+  stroke-width: 28px;
 }
 
 .tickGroup {
@@ -98,6 +114,8 @@
 
 .tickHit {
   pointer-events: stroke;
+  stroke: transparent;
+  stroke-width: 20px;
 }
 
 .tickMark {
@@ -171,7 +189,11 @@
 
 @media (max-width: 640px) {
   .section {
-    padding: 8px 8px 72px;
+    padding: 8px 4px 72px;
+  }
+
+  .frame {
+    opacity: 1 !important;
   }
 
   .stage {
@@ -181,7 +203,7 @@
   }
 
   .svg {
-    width: min(190vw, 740px);
+    width: min(220vw, 820px);
     max-width: none;
     margin-left: 50%;
     transform: translateX(-50%);
@@ -210,5 +232,14 @@
   .centerSecondaryValue {
     font-size: 12.5px;
     line-height: 1.5;
+  }
+
+  .skillHit {
+    transform: scale(1.35);
+    stroke-width: 40px;
+  }
+
+  .tickHit {
+    stroke-width: 32px;
   }
 }

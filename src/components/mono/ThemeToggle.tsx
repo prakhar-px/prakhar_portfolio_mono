@@ -5,6 +5,7 @@ import { useIsMobile } from '@/hooks/useIsMobile'
 export default function ThemeToggle() {
   const { theme, toggle } = useTheme()
   const isMobile = useIsMobile()
+  if (isMobile) return null
   const dim = theme === 'light' ? 'rgba(17,17,17,0.32)' : 'rgba(255,255,255,0.32)'
   const hover = theme === 'light' ? '#111' : '#fff'
 
